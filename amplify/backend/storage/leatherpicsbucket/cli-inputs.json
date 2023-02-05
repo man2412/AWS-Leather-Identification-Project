@@ -1,0 +1,14 @@
+{
+  "resourceName": "leatherpicsbucket",
+  "policyUUID": "53567a08",
+  "bucketName": "amplifyreactauthbucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "S3Triggerf7481186",
+  "groupAccess": {}
+}

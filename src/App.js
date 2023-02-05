@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import { Amplify } from 'aws-amplify'
+import { Storage } from 'aws-amplify'
+
+
 
 import { withAuthenticator, Button, Heading } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -12,28 +15,58 @@ const initialState = { name: '', description: '' }
 const App = ({ signOut, user }) => {
   const [formState, setFormState] = useState(initialState)
 
+
   
   function setInput(key, value) {
     setFormState({ ...formState, [key]: value })
   }
+  const [images, setImages] = useState([])
+  useEffect(() => {
+    fetchImages()
+  }, [])
+  async function fetchImages() {
+    let imageKeys = await Storage.list('')
+    console.log(imageKeys)
+    imageKeys = await Promise.all(imageKeys.results.map(async k => {
+      const key = await Storage.get(k.key)
+      return key
+    }))
+    console.log('imageKeys: ', imageKeys)
+    setImages(imageKeys)
+  }
+  async function onChange(e) {
+    const file = e.target.files[0];
+    const result = await Storage.put(file.name, file, {
+      contentType: 'image/png'
+    })
+    console.log({ result })
+    fetchImages()
+  }
+
 
 return (
   <div style={styles.container}>
-    <Heading level={1}>Hello {user.username}</Heading>
-    <Button onClick={signOut} style={styles.button}>Sign out</Button>
+    
+    
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {
+          images&&images.map(image => (
+            <img
+              src={image}
+              key={image}
+              style={{width: 500, height: 300}}
+            />
+          ))
+        }
+      </div>
+      <Button onClick={signOut} style={styles.button}>Sign out</Button>
+      <input
+        type="file"
+        onChange={onChange}
+      />
+    
 
-    <input
-      onChange={event => setInput('name', event.target.value)}
-      style={styles.input}
-      value={formState.name}
-      placeholder="Name"
-    />
-    <input
-      onChange={event => setInput('description', event.target.value)}
-      style={styles.input}
-      value={formState.description}
-      placeholder="Description"
-    />
+   
   </div>
 )
 }

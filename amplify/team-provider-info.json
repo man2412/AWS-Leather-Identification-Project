@@ -14,6 +14,15 @@
     "categories": {
       "auth": {
         "amplifyreactauth29422f09": {}
+      },
+      "function": {
+        "S3Triggerf7481186": {
+          "deploymentBucketName": "amplify-amplifyreactauth-dev-195712-deployment",
+          "s3Key": "amplify-builds/S3Triggerf7481186-4f6f4e6f4d4778612b73-build.zip"
+        }
+      },
+      "storage": {
+        "leatherpicsbucket": {}
       }
     }
   }
